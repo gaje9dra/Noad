@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f4ee" />
+    <meta
+      name="description"
+      content="A social space for creative people. No ads. Just things worth making."
+    />
+    <title>noad — make something worth sharing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="supabase-config.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="wordmark" href="#" aria-label="noad home">
+          <span class="wordmark-mark">n</span><span>noad</span><span class="wordmark-period">.</span>
+        </a>
+
+        <button class="profile-switcher" type="button" aria-label="Sign in or manage account">
+          <span class="avatar avatar-you">?</span>
+          <span class="profile-copy"><strong>Sign in to noad</strong><small>Join the community</small></span>
+          <span class="switcher-dots">↗</span>
+        </button>
+
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a class="nav-link active" href="#feed" data-view="For you"><span class="nav-icon">⌂</span>Home</a>
+          <a class="nav-link" href="#explore" data-view="Explore"><span class="nav-icon">⌕</span>Explore</a>
+          <a class="nav-link" href="#communities" data-view="Communities"><span class="nav-icon">◉</span>Communities</a>
+          <a class="nav-link" href="#saved" data-view="Saved"><span class="nav-icon">▱</span>Saved</a>
+        </nav>
+
+        <div class="sidebar-section">
+          <div class="section-label">COMMUNITIES <button class="tiny-plus" type="button" aria-label="Create a community">+</button></div>
+          <div id="community-list" class="community-list"><p class="rail-loading">Loading communities…</p></div>
+          <button class="discover-link" type="button" data-view="Communities">Discover communities <span>↗</span></button>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="pledge-card">
+            <span class="pledge-spark">✳</span>
+            <strong>People, not placements.</strong>
+            <p>This space is made by people, not ad budgets.</p>
+            <a href="#manifesto">Our little promise <span>↗</span></a>
+          </div>
+          <button class="settings-link" type="button" aria-label="Sign out" hidden><span>↪</span> Sign out</button>
+        </div>
+      </aside>
+
+      <main class="main-content" id="feed">
+        <header class="mobile-header">
+          <a class="wordmark" href="#"><span class="wordmark-mark">n</span><span>noad</span><span class="wordmark-period">.</span></a>
+          <button class="mobile-compose" type="button" data-open-compose aria-label="Create a post">＋</button>
+        </header>
+
+        <div class="feed-heading">
+          <div>
+            <p class="eyebrow" id="current-date"></p>
+            <h1>A little inspiration <span>for your day.</span></h1>
+          </div>
+          <button class="compose-button" type="button" data-open-compose><span>＋</span> Create a post</button>
+        </div>
+
+        <div class="welcome-note">
+          <span class="welcome-icon">✳</span>
+          <p><strong>A note from noad:</strong> no sponsored posts or paid placements. Just people and brands making things worth sharing.</p>
+          <button type="button" class="dismiss-note" aria-label="Dismiss note">×</button>
+        </div>
+
+        <div class="feed-controls">
+          <div class="feed-tabs" role="tablist" aria-label="Feed filter">
+            <button type="button" class="feed-tab selected" data-feed="For you" role="tab" aria-selected="true">For you</button>
+            <button type="button" class="feed-tab" data-feed="Following" role="tab" aria-selected="false">Following</button>
+            <button type="button" class="feed-tab" data-feed="Fresh" role="tab" aria-selected="false">Fresh</button>
+          </div>
+          <button class="filter-button" type="button" aria-label="Sort posts"><span>☷</span> <span class="filter-label">Popular</span> <span class="chevron">⌄</span></button>
+        </div>
+
+        <section class="post-list" aria-label="Community posts" id="post-list" aria-live="polite"></section>
+        <button type="button" id="load-more" class="load-more" hidden>Load more</button>
+      </main>
+
+      <aside class="right-rail">
+        <label class="search-box">
+          <span>⌕</span>
+          <input type="search" id="search-input" placeholder="Find your people..." aria-label="Search posts and communities" />
+          <kbd>⌘ K</kbd>
+        </label>
+
+        <section class="rail-section prompt-card">
+          <div class="rail-heading"><span class="rail-icon prompt-icon">✳</span><span>THE DAILY SPARK</span><button type="button" aria-label="More daily prompts">···</button></div>
+          <h2>Make something<br />with your hands.</h2>
+          <p>A tiny invitation to step away from the screen and make a little mess. No audience required.</p>
+          <div class="prompt-footer"><span>One small idea for today</span></div>
+        </section>
+
+        <section class="rail-section">
+          <div class="rail-heading"><span class="rail-icon trending-icon">↗</span><span>COMMUNITY CORNERS</span></div>
+          <div id="community-discovery"><p class="rail-loading">Finding your people…</p></div>
+        </section>
+
+        <section class="rail-section people-section">
+          <div class="rail-heading"><span class="rail-icon people-icon">♡</span><span>GOOD PEOPLE TO KNOW</span></div>
+          <div id="people-suggestions"><p class="rail-loading">Finding creative people…</p></div>
+        </section>
+
+        <footer class="rail-footer">
+          <a href="#about">About</a><a href="#guidelines">Community guidelines</a><a href="#privacy">Privacy</a><a href="#terms">Terms</a>
+          <p>Made with intention, for humans. © <span id="current-year"></span> noad</p>
+        </footer>
+      </aside>
+    </div>
+
+    <dialog class="compose-dialog" id="compose-dialog" aria-labelledby="compose-title">
+      <form method="dialog" class="dialog-top">
+        <span class="dialog-label">A GOOD THING STARTS WITH YOU</span>
+        <button class="close-dialog" value="cancel" aria-label="Close">×</button>
+      </form>
+      <form id="compose-form">
+        <h2 id="compose-title">Make a little something.</h2>
+        <p class="dialog-subtitle">A thought, a work in progress, a thing you made. It all belongs here.</p>
+        <label class="sr-only" for="post-text">Your post</label>
+        <textarea id="post-text" maxlength="500" placeholder="What are you making, thinking, or loving lately?"></textarea>
+        <label class="upload-control" for="post-image"><span>＋</span> Add a photo <small>JPG, PNG, or WebP · up to 10 MB</small></label>
+        <input id="post-image" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+        <div id="image-preview" class="image-preview" hidden></div>
+        <div class="compose-meta"><span id="char-count">0 / 500</span><span class="no-promo-note">✳ No promos. Just your creativity.</span></div>
+        <div class="compose-options">
+          <label for="post-community">Share with</label>
+          <select id="post-community" required></select>
+          <button type="submit" class="publish-button">Share with the community <span>↗</span></button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="compose-dialog auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <form method="dialog" class="dialog-top">
+        <span class="dialog-label">A SOCIAL SPACE, WITHOUT AD PLACEMENTS</span>
+        <button class="close-dialog" value="cancel" aria-label="Close">×</button>
+      </form>
+      <h2 id="auth-title">Make yourself at home.</h2>
+      <p class="dialog-subtitle">Create an account to share work, find your people, and join communities.</p>
+      <form id="auth-form">
+        <label class="auth-field signup-only" for="auth-display-name">Your name</label>
+        <input class="auth-input signup-only" id="auth-display-name" name="display_name" maxlength="50" autocomplete="name" placeholder="How should we call you?" />
+        <label class="auth-field signup-only" for="auth-account-type">I’m joining as</label>
+        <select class="auth-input signup-only" id="auth-account-type" name="account_type">
+          <option value="person">A person making things</option>
+          <option value="brand">A brand making things</option>
+        </select>
+        <label class="auth-field" for="auth-email">Email</label>
+        <input class="auth-input" id="auth-email" name="email" type="email" autocomplete="email" required maxlength="254" />
+        <label class="auth-field" for="auth-password">Password</label>
+        <input class="auth-input" id="auth-password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" />
+        <button id="auth-submit" class="publish-button auth-submit" type="submit">Create account</button>
+      </form>
+      <div class="auth-switch"><span id="auth-switch-copy">Already have an account?</span><button type="button" id="auth-switch">Sign in</button></div>
+      <button type="button" id="auth-reset" class="text-button">Forgot your password?</button>
+      <button type="button" id="auth-sign-out" class="text-button" hidden>Sign out</button>
+    </dialog>
+
+    <dialog class="compose-dialog community-dialog" id="community-dialog" aria-labelledby="community-title">
+      <form method="dialog" class="dialog-top">
+        <span class="dialog-label">MAKE ROOM FOR A GOOD CONVERSATION</span>
+        <button class="close-dialog" value="cancel" aria-label="Close">×</button>
+      </form>
+      <h2 id="community-title">Start a community.</h2>
+      <p class="dialog-subtitle">Make a welcoming corner for people who love the same things.</p>
+      <form id="community-form">
+        <label class="auth-field" for="community-name">Community name</label>
+        <input class="auth-input" id="community-name" name="name" maxlength="60" required placeholder="e.g. Tiny garden club" />
+        <label class="auth-field" for="community-description">What brings you together?</label>
+        <textarea class="community-description" id="community-description" name="description" maxlength="280" required placeholder="Tell people what this community is for."></textarea>
+        <button class="publish-button auth-submit" type="submit">Create community <span>↗</span></button>
+      </form>
+    </dialog>
+
+    <dialog class="compose-dialog comments-dialog" id="comments-dialog" aria-labelledby="comments-title">
+      <form method="dialog" class="dialog-top">
+        <span class="dialog-label">A KIND WORD GOES A LONG WAY</span>
+        <button class="close-dialog" value="cancel" aria-label="Close">×</button>
+      </form>
+      <h2 id="comments-title">The conversation.</h2>
+      <div id="comments-list" class="comments-list"></div>
+      <form id="comment-form" class="comment-form">
+        <label class="sr-only" for="comment-text">Write a comment</label>
+        <textarea id="comment-text" maxlength="500" required placeholder="Add something kind…"></textarea>
+        <button class="publish-button" type="submit">Reply <span>↗</span></button>
+      </form>
+    </dialog>
+
+    <noscript><p class="noscript-message">noad needs JavaScript enabled to load your live community feed.</p></noscript>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
